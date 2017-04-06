@@ -9,6 +9,7 @@ extern "C"{
 #include <stddef.h> // for size_t
 #include <string.h> // for memcpy
 #include <stdlib.h> // for malloc
+#include <stdint.h> // for uint8_t
 
 typedef struct dyn_array dyn_array_t;
 
@@ -38,6 +39,24 @@ typedef struct dyn_array dyn_array_t;
 // \return new dynamic array pointer, NULL on error
 dyn_array_t * dyn_array_create(const size_t capacity, const size_t data_type_size, void (*destruct_func)(void *));
 
+// Create a new dynamic array from a given array (we only copy the data)
+// \param data The data to import
+// \param count Number of objects to import
+// \param data_type_size The size of each object
+// \param destruct_func Optional destructor (NULL to disable)
+// \return new dynamic array pointer, NULL on error
+dyn_array_t * dyn_array_import(const void *const data, const size_t count, const size_t data_type_size,
+                                                void (*destruct_func)(void *));
+
+                                                
+// Dynamic array destructor
+// Applies destructor to all remaining elements
+// \param byn_array The dynamic array to destruct
+void dyn_array_destroy(dyn_array_t *const dyn_arr);
+
+// Removes and optionally destructs all array elements
+// \param dyn_array the dynamic array
+void dyn_array_clear(dyn_array_t *const dyn_arr);
 
 
 #ifdef __cplusplus

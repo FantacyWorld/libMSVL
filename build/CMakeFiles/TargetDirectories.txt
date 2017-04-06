@@ -1,0 +1,2 @@
+/home/geekwar/libMSVL/build/CMakeFiles/dyn_arr.dir
+/home/geekwar/libMSVL/build/CMakeFiles/libMSVL_test.dir

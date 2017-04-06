@@ -7,22 +7,47 @@
 #define DYN_MAX_CAPACITY (((size_t) 1) << ((sizeof(size_t) << 3) - 8))
 #endif
 
+const int array_size = 100;
+
 // 0 capacity
-TEST(dyn_arr_create, create_with_zero_capacity)
+TEST(dyn_array_create, create_with_zero_capacity)
 {
     size_t data_type_size = 4;
     dyn_array_t * dyn_arr = dyn_array_create(0, data_type_size, NULL);
-    EXPECT_NE(nullptr, dyn_arr) << "dyn_arr_create failed with 0 capacity" << std::endl;
+    EXPECT_NE(nullptr, dyn_arr) << "dyn_array_create failed with 0 capacity" << std::endl;
 }
 
 // high capacity
-TEST(dyn_arr_create, create_with_high_capacity)
+TEST(dyn_array_create, create_with_high_capacity)
 {
 	size_t high_capacity = 1 << 10;
     size_t data_type_size = 4;
     dyn_array_t * dyn_arr = dyn_array_create(high_capacity, data_type_size, NULL);
-    EXPECT_NE(nullptr, dyn_arr) << "dyn_arr_create failed with a high capacity" << std::endl;
+    EXPECT_NE(nullptr, dyn_arr) << "dyn_array_create failed with a high capacity" << std::endl;
 }
+
+// import from an array with int
+TEST(dyn_array_import, import_array_with_int_type)
+{
+
+	int array[array_size];
+	for(int i = 0;i < array_size;i++) array[i] = i;
+	
+	dyn_array_t * dyn_arr = dyn_array_import(array, array_size, sizeof(int), NULL);
+    EXPECT_NE(nullptr, dyn_arr) << "dyn_array_import failed with an array with int type" << std::endl;
+	dyn_array_destroy(dyn_arr);
+}
+
+// import from an array with custom type
+// eg: dyn_array_t
+TEST(dyn_array_import, import_array_with_custom_type)
+{
+
+	
+
+}
+
+
 
 int main(int argc, char ** argv)
 {

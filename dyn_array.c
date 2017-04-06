@@ -1,13 +1,5 @@
 #include "dyn_array.h"
 
-struct dyn_array {
-    size_t capacity; // in objects
-    size_t size; // current size in objects
-    const size_t data_type_size;
-    void *array;
-    void (*destructor)(void *);
-};
-
 // Support 64-bit size_t
 // Allowing it to be externally set
 #ifndef DYN_MAX_CAPACITY // in bytes
@@ -73,7 +65,7 @@ dyn_array_t * dyn_array_import(const void *const data, const size_t count, const
 {
     if(data && count > 0)
     {
-        dyn_array_t * dyn_arr = dyn_arr_create(count, data_type_size, destruct_func);
+        dyn_array_t * dyn_arr = dyn_array_create(count, data_type_size, destruct_func);
         if(dyn_arr)
         {
             //memcpy(dyn_arr->array, data, count * data_type_size);
@@ -100,6 +92,10 @@ void dyn_array_destroy(dyn_array_t *const dyn_arr)
     }
 }
 
+void dyn_array_destroy_wrap(void *const dyn_arr)
+{
+	dyn_array_destroy((dyn_array_t *)dyn_arr);
+}
 
 void dyn_array_clear(dyn_array_t *const dyn_arr)
 {
@@ -115,7 +111,7 @@ bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t incremen
 bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
                       const DYN_SHIFT_MODE mode, const void *const data_src)
 {
-    if(dyn_arr && position >= 0 && count && mode == MODE_INSERT && data_src)
+    if(dyn_arr && count && mode == MODE_INSERT && data_src)
     {
         // insert will lead to memory grow, so we need to reallocate if not enough
         if(position <= dyn_arr->size && dyn_request_size_increase(dyn_arr, count))
@@ -144,18 +140,18 @@ bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const s
     {
         if(mode == MODE_ERASE) 
          {
-             if(dyn_arr->destruct_func)
+             if(dyn_arr->destructor)
              {
                  uint8_t * destruct_pos = DYN_ARRAY_POSITION(dyn_arr, position);
                  for(size_t total = count;total;total--, destruct_pos += dyn_arr->data_type_size)
-                     dyn_arr->destruct_func(destruct_pos);
+                     dyn_arr->destructor(destruct_pos);
              }
          }
         else // extracting data
         {
             if(data_dst)
             {
-                memcpy(data_dst, DYN_ARRAY_POSITION(position), dyn_arr->data_type_size * count);
+                memcpy(data_dst, DYN_ARRAY_POSITION(dyn_arr, position), dyn_arr->data_type_size * count);
                 return true;
             }
             else // extracting data without data_dst
@@ -187,7 +183,7 @@ bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t incremen
         if(needed_size <= DYN_MAX_CAPACITY)
         {
             size_t new_capacity = dyn_arr->capacity << 1;
-            while(new_capacity < need_size)
+            while(new_capacity < needed_size)
                 new_capacity <<= 1;
             
             void *new_array = realloc(dyn_arr->array, new_capacity);

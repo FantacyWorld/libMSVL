@@ -13,6 +13,14 @@ extern "C"{
 
 typedef struct dyn_array dyn_array_t;
 
+struct dyn_array {
+    size_t capacity; // in objects
+    size_t size; // current size in objects
+    const size_t data_type_size;
+    void *array;
+    void (*destructor)(void *);
+};
+
 /*
     Destructor notes!
 
@@ -53,10 +61,13 @@ dyn_array_t * dyn_array_import(const void *const data, const size_t count, const
 // Applies destructor to all remaining elements
 // \param byn_array The dynamic array to destruct
 void dyn_array_destroy(dyn_array_t *const dyn_arr);
+// for destructor
+void dyn_array_destroy_wrap(void *const dyn_arr);
 
 // Removes and optionally destructs all array elements
 // \param dyn_array the dynamic array
 void dyn_array_clear(dyn_array_t *const dyn_arr);
+
 
 
 #ifdef __cplusplus

@@ -2,7 +2,7 @@
 A library for the MSVL compiler to support  parallel statements
 
 [install]
-		$ mkdir build && cd build
+		$ mkdir build && cd build <br>
 		$ cmake /source/root/directory
 		$ cmake --build .
 		$ cmake --build . --target install # defaut install directory: /usr/local

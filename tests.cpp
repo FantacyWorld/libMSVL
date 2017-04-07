@@ -9,19 +9,25 @@
 
 const int array_size = 100;
 
+<<<<<<< HEAD
 void destructor_dyn_array_t(void * dyn_arr)
 {
 	dyn_array_clear((dyn_array_t *)dyn_arr);
 	free(((dyn_array_t *)dyn_arr)->array);
 }
 
+=======
+>>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
 // 0 capacity
 TEST(dyn_array_create, create_with_zero_capacity)
 {
     size_t data_type_size = 4;
     dyn_array_t * dyn_arr = dyn_array_create(0, data_type_size, NULL);
     EXPECT_NE(nullptr, dyn_arr) << "dyn_array_create failed with 0 capacity" << std::endl;
+<<<<<<< HEAD
 	dyn_array_destroy(dyn_arr);
+=======
+>>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
 }
 
 // high capacity
@@ -31,7 +37,10 @@ TEST(dyn_array_create, create_with_high_capacity)
     size_t data_type_size = 4;
     dyn_array_t * dyn_arr = dyn_array_create(high_capacity, data_type_size, NULL);
     EXPECT_NE(nullptr, dyn_arr) << "dyn_array_create failed with a high capacity" << std::endl;
+<<<<<<< HEAD
 	dyn_array_destroy(dyn_arr);
+=======
+>>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
 }
 
 // import from an array with int
@@ -50,6 +59,7 @@ TEST(dyn_array_import, import_array_with_int_type)
 // eg: dyn_array_t
 TEST(dyn_array_import, import_array_with_custom_type)
 {
+<<<<<<< HEAD
 	dyn_array_t * array = (dyn_array_t *)calloc(array_size, sizeof(dyn_array_t));
 
 	for(int i = 0;i < array_size;i++)
@@ -63,6 +73,11 @@ TEST(dyn_array_import, import_array_with_custom_type)
 	dyn_array_t * dyn_arr = dyn_array_import(array, array_size, sizeof(dyn_array_t), destructor_dyn_array_t);
     EXPECT_NE(nullptr, dyn_arr) << "dyn_array_import failed with an array with dyn_array_t type" << std::endl;
 	dyn_array_destroy(dyn_arr);
+=======
+
+	
+
+>>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
 }
 
 

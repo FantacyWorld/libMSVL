@@ -61,7 +61,12 @@ dyn_array_t * dyn_array_import(const void *const data, const size_t count, const
 // Applies destructor to all remaining elements
 // \param byn_array The dynamic array to destruct
 void dyn_array_destroy(dyn_array_t *const dyn_arr);
+<<<<<<< HEAD
 
+=======
+// for destructor
+void dyn_array_destroy_wrap(void *const dyn_arr);
+>>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
 
 // Removes and optionally destructs all array elements
 // \param dyn_array the dynamic array

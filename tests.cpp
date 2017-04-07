@@ -14,7 +14,7 @@ void destructor_dyn_array_t(void * dyn_arr_dp)
 {
     if(dyn_arr_dp)
     {
-        dyn_array_destroy((dyn_array_t *)*dyn_arr_dp);
+        dyn_array_destroy(*(dyn_array_t **)dyn_arr_dp);
     }
 }
 
@@ -65,9 +65,9 @@ TEST(dyn_array_import, import_array_with_custom_type)
 	{
 		dyn_array_t * dyn_arr = dyn_array_import(array, array_size, sizeof(int), NULL);
 		ASSERT_NE(nullptr, dyn_arr) << "dyn_array_import failed with an array with int type" << std::endl;
-		array[i] = dyn_arr;
+		dyn_array_array[i] = dyn_arr;
 	}
-	dyn_array_t * dyn_arr = dyn_array_import(array, array_size, sizeof(dyn_array_t *), destructor_dyn_array_t);
+	dyn_array_t * dyn_arr = dyn_array_import(dyn_array_array, array_size, sizeof(dyn_array_t *), destructor_dyn_array_t);
     EXPECT_NE(nullptr, dyn_arr) << "dyn_array_import failed with an array with dyn_array_t type" << std::endl;
 	dyn_array_destroy(dyn_arr);
 }

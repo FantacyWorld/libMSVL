@@ -21,12 +21,16 @@ typedef enum
     TYPE_REMOVE = 0x02
 } DYN_SHIFT_MODE;
 
+// static functions
 // The core of any insert/remove operation
-bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
+static bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
                       const DYN_SHIFT_MODE mode, const void *const data_src);
                       
-bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
+static bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
                       const DYN_SHIFT_MODE mode, void *const data_dst);    
+
+
+static bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t increment);
 
                       
 dyn_array_t * dyn_array_create(const size_t capacity, const size_t data_type_size, void (*destruct_func)(void *))
@@ -81,6 +85,14 @@ dyn_array_t * dyn_array_import(const void *const data, const size_t count, const
     return NULL;
 }
 
+const void *dyn_array_export(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr)
+    {
+        return dyn_arr->array;
+    }
+    return NULL;
+}
 
 void dyn_array_destroy(dyn_array_t *const dyn_arr)
 {
@@ -92,6 +104,74 @@ void dyn_array_destroy(dyn_array_t *const dyn_arr)
     }
 }
 
+
+
+// the family of 'view' functions 
+void *dyn_array_front(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr && dyn_arr->size)
+    {
+        return dyn_arr->array;
+    }
+    return NULL;
+}
+
+void *dyn_array_back(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr && dyn_arr->size)
+    {
+        return DYN_ARRAY_POSITION(dyn_arr, dyn_arr->size - 1);
+    }
+    return NULL;
+}
+
+void *dyn_array_at(const dyn_array_t *const dyn_arr, const size_t index)
+{
+    if(dyn_arr && index < dyn_arr->size)
+    {
+        return DYN_ARRAY_POSITION(dyn_arr, index);
+    }
+    return NULL
+}
+
+
+
+// the family of 'insert' functions
+bool dyn_array_push_front(dyn_array_t *const dyn_arr, const void *const object)
+{
+    return dyn_shift_insert(dyn_arr, 0, 1, MODE_INSERT, object);
+}
+
+bool dyn_array_push_back(dyn_array_t *const dyn_arr, const void *const object)
+{
+    return dyn_shift_insert(dyn_arr, dyn_arr->size, 1, MODE_INSERT, object);
+}
+
+bool dyn_array_insert(dyn_array_t *const dyn_arr, const size_t index, const void *const object)
+{
+    return dyn_shift_insert(dyn_arr, index, 1, MODE_INSERT, object);
+}
+
+
+
+// the family of 'remove' functions
+
+// MODE_ERASE
+bool dyn_array_pop_front(dyn_array_t *const dyn_arr)
+{
+    return dyn_shift_remove(dyn_arr, 0, 1, MODE_ERASE, NULL);
+}
+
+bool dyn_array_pop_back(dyn_array_t *const dyn_arr)
+{
+   return dyn_shift_remove(dyn_arr, dyn_arr->size - 1, 1, MODE_ERASE, NULL); 
+}
+
+bool dyn_array_erase(dyn_array_t *const dyn_arr, const size_t index)
+{
+       return dyn_shift_remove(dyn_arr, index, 1, MODE_ERASE, NULL); 
+}
+
 void dyn_array_clear(dyn_array_t *const dyn_arr)
 {
     if(dyn_arr && dyn_arr->size)
@@ -100,10 +180,130 @@ void dyn_array_clear(dyn_array_t *const dyn_arr)
     }
 }
 
+// MODE_EXTRACT
+bool dyn_array_extract_front(dyn_array_t *const dyn_arr, void *const object)
+{
+    return dyn_shift_remove(dyn_arr, 0, 1, MODE_EXTRACT, object);
+}
 
-bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t increment);
+bool dyn_array_extract_back(dyn_array_t *const dyn_arr, void *const object)
+{
+    return dyn_shift_remove(dyn_arr, dyn_arr->size - 1, 1, MODE_EXTRACT, object);
+}
 
-bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
+bool dyn_array_extract(dyn_array_t *const dyn_arr, const size_t index, void *const object)
+{
+    return dyn_shift_remove(dyn_arr, index, 1, MODE_EXTRACT, object);    
+}
+
+
+
+// the family of 'get' functions
+bool dyn_array_empty(const dyn_array_t *const dyn_arr)
+{
+    return dyn_array_size(dyn_arr) == 0;
+}
+
+size_t dyn_array_size(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr)
+        return dyn_arr->size;
+    return 0;
+}
+
+size_t dyn_array_capacity(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr)
+        return dyn_arr->capacity;
+    return 0;
+}
+
+size_t dyn_array_data_type_size(const dyn_array_t *const dyn_arr)
+{
+    if(dyn_arr)
+        return dyn_arr->data_type_size;
+    return 0;
+}
+
+// 'sort' functions
+bool dyn_array_sort(dyn_array_t *const dyn_arr, int (*const compare)(const void *, const void *))
+{
+    if(dyn_arr && dyn_arr->size && compare)
+    {
+        // qsort in stdlib.h
+        qsort(dyn_arr->array, dyn_arr->size, dyn_arr->data_type_size, compare);
+        return true;
+        
+        // insert sort
+        /*
+        int i, j;
+        for(i = 1;i < dyn_arr->size;i++)
+        {
+            j = i - 1;
+            dyn_array_t temp = memcpy(&tmp, DYN_ARRAY_POSITION(dyn_arr, j), dyn_arr->data_type_size);
+            while(compare(DYN_ARRAY_POSITION(dyn_arr, i), DYN_ARRAY_POSITION(dyn_arr, j)) < 0) j--;
+            if(j < 0) // temp assign dyn_arr->array[0]
+            {
+                memmove(DYN_ARRAY_POSITION(dyn_arr, 1), DYN_ARRAY_POSITION(dyn_arr, 0), DYN_SIZE_N_ELEMS(dyn_arr, i));
+                memcpy(DYN_ARRAY_POSITION(dyn_arr, 0), &temp, dyn_arr->data_type_size);
+            }
+            else
+            {
+                memmove(DYN_ARRAY_POSITION(dyn_arr, j + 1), DYN_ARRAY_POSITION(dyn_arr, j), DYN_SIZE_N_ELEMS(dyn_arr, i - j));
+                memcpy(DYN_ARRAY_POSITION(dyn_arr, j), &temp, dyn_arr->data_type_size);               
+            }
+        }
+        return true;
+        */
+    }
+    return false;
+}
+
+bool dyn_array_insert_sorted(dyn_array_t *const dyn_arr, const void *const object,
+                             int (*const compare)(const void *const, const void *const))
+{
+    if(dyn_arr && compare && object)
+    {
+        size_t insert_position = 0;
+        if(dyn_arr->size)
+        {
+            while(insert_position < dyn_arr->size && 
+            compare(DYN_ARRAY_POSITION(dyn_arr, insert_position), object) < 0)
+            insert_position ++;
+        }
+        
+        return dyn_shift_insert(dyn_arr, insert_position, 1, MODE_INSERT, object);
+    }
+    return false;
+}
+
+
+
+// other functions
+bool dyn_array_for_each(dyn_array_t *const dyn_arr, void (*const func)(void *const, void *), void *arg)
+{
+    if(dyn_arr && dyn_arr->array && func)
+    {
+        // So I just noticed we never check the data array ever
+        // Which is both unsafe and potentially undefined behavior
+        // Although we're the only ones that touch the pointer and we always validate it.
+        // So it's questionable. We'll check it here.
+        // I'm considering taking these out. Anything under our control that touches this pointer is safe
+        // Not checking it will segfault, which is good for debugging, but not so much for the end user
+        // but good for the tester. But the tester may not trigger this if it's a crazy edge case.
+        unit8_t * data_walker = (uint8_t *)dyn_arr->array;
+        for(size_t idx = 0;idx < dyn_arr->size;idx++, data_walker += dyn_arr->data_type_size)
+            fun((void *)data_walker, arg);
+        
+        return true;
+    }
+    return false;
+}
+
+
+// core functions for insert and remove
+// static function definitions
+static bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
                       const DYN_SHIFT_MODE mode, const void *const data_src)
 {
     if(dyn_arr && count && mode == MODE_INSERT && data_src)
@@ -127,7 +327,7 @@ bool dyn_shift_insert(dyn_array_t *const dyn_arr, const size_t position, const s
 }
 
 
-bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
+static bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const size_t count,
                       const DYN_SHIFT_MODE mode, void *const data_dst)
 {
     if(dyn_arr && count && dyn_arr->size && (mode & TYPE_REMOVE) // MODE_ERASE || MODE_EXTRACT = TYPE_REMOVE
@@ -165,7 +365,7 @@ bool dyn_shift_remove(dyn_array_t *const dyn_arr, const size_t position, const s
     return false;
 }
 
-bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t increment)
+static bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t increment)
 {
     if(dyn_arr)
     {

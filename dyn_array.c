@@ -92,14 +92,6 @@ void dyn_array_destroy(dyn_array_t *const dyn_arr)
     }
 }
 
-<<<<<<< HEAD
-=======
-void dyn_array_destroy_wrap(void *const dyn_arr)
-{
-	dyn_array_destroy((dyn_array_t *)dyn_arr);
-}
->>>>>>> 8081a490136e26286bd84ceec32aa0557aa1238f
-
 void dyn_array_clear(dyn_array_t *const dyn_arr)
 {
     if(dyn_arr && dyn_arr->size)

@@ -10,6 +10,7 @@ extern "C"{
 #include <string.h> // for memcpy
 #include <stdlib.h> // for malloc
 #include <stdint.h> // for uint8_t
+#include <stdio.h>
 
 typedef struct dyn_array dyn_array_t;
 
@@ -74,7 +75,7 @@ void dyn_array_destroy(dyn_array_t *const dyn_arr);
 /// Returns a pointer to the object at the front of the array
 /// \param dyn_array the dynamic array
 /// \return Pointer to front object (NULL on error/empty array)
-void * dyn_array_front(dyn_array_t * const dyn_arr);
+void * dyn_array_front(const dyn_array_t * const dyn_arr);
 
 /// Returns a pointer to the object at the end of the array
 /// \param dyn_array the dynamic array

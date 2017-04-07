@@ -131,7 +131,7 @@ void *dyn_array_at(const dyn_array_t *const dyn_arr, const size_t index)
     {
         return DYN_ARRAY_POSITION(dyn_arr, index);
     }
-    return NULL
+    return NULL;
 }
 
 
@@ -144,7 +144,7 @@ bool dyn_array_push_front(dyn_array_t *const dyn_arr, const void *const object)
 
 bool dyn_array_push_back(dyn_array_t *const dyn_arr, const void *const object)
 {
-    return dyn_shift_insert(dyn_arr, dyn_arr->size, 1, MODE_INSERT, object);
+    return dyn_shift_insert(dyn_arr, dyn_arr->size, 1, MODE_INSERT, (void * const)object);
 }
 
 bool dyn_array_insert(dyn_array_t *const dyn_arr, const size_t index, const void *const object)
@@ -229,32 +229,30 @@ size_t dyn_array_data_type_size(const dyn_array_t *const dyn_arr)
 bool dyn_array_sort(dyn_array_t *const dyn_arr, int (*const compare)(const void *, const void *))
 {
     if(dyn_arr && dyn_arr->size && compare)
-    {
+    {  
         // qsort in stdlib.h
         qsort(dyn_arr->array, dyn_arr->size, dyn_arr->data_type_size, compare);
         return true;
-        
+       
+		/*
         // insert sort
-        /*
         int i, j;
-        for(i = 1;i < dyn_arr->size;i++)
+		dyn_array_t *temp = (dyn_array_t *)malloc(sizeof(dyn_array_t));
+        for(i = 1;i < (int)dyn_arr->size;i++)
         {
             j = i - 1;
-            dyn_array_t temp = memcpy(&tmp, DYN_ARRAY_POSITION(dyn_arr, j), dyn_arr->data_type_size);
-            while(compare(DYN_ARRAY_POSITION(dyn_arr, i), DYN_ARRAY_POSITION(dyn_arr, j)) < 0) j--;
-            if(j < 0) // temp assign dyn_arr->array[0]
-            {
-                memmove(DYN_ARRAY_POSITION(dyn_arr, 1), DYN_ARRAY_POSITION(dyn_arr, 0), DYN_SIZE_N_ELEMS(dyn_arr, i));
-                memcpy(DYN_ARRAY_POSITION(dyn_arr, 0), &temp, dyn_arr->data_type_size);
-            }
-            else
-            {
-                memmove(DYN_ARRAY_POSITION(dyn_arr, j + 1), DYN_ARRAY_POSITION(dyn_arr, j), DYN_SIZE_N_ELEMS(dyn_arr, i - j));
-                memcpy(DYN_ARRAY_POSITION(dyn_arr, j), &temp, dyn_arr->data_type_size);               
-            }
+			if(temp == NULL)
+				return false;
+			memcpy(temp, DYN_ARRAY_POSITION(dyn_arr, i), dyn_arr->data_type_size);
+            while(j >= 0 &&compare(DYN_ARRAY_POSITION(dyn_arr, i), DYN_ARRAY_POSITION(dyn_arr, j)) < 0) j--;
+			j++;
+            memmove(DYN_ARRAY_POSITION(dyn_arr, j + 1), DYN_ARRAY_POSITION(dyn_arr, j), DYN_SIZE_N_ELEMS(dyn_arr, i - j));
+            memcpy(DYN_ARRAY_POSITION(dyn_arr, j), temp, dyn_arr->data_type_size);               
         }
+		free(temp);
         return true;
-        */
+		*/
+        
     }
     return false;
 }
@@ -291,9 +289,9 @@ bool dyn_array_for_each(dyn_array_t *const dyn_arr, void (*const func)(void *con
         // I'm considering taking these out. Anything under our control that touches this pointer is safe
         // Not checking it will segfault, which is good for debugging, but not so much for the end user
         // but good for the tester. But the tester may not trigger this if it's a crazy edge case.
-        unit8_t * data_walker = (uint8_t *)dyn_arr->array;
+        uint8_t * data_walker = (uint8_t *)dyn_arr->array;
         for(size_t idx = 0;idx < dyn_arr->size;idx++, data_walker += dyn_arr->data_type_size)
-            fun((void *)data_walker, arg);
+            func((void *)data_walker, arg);
         
         return true;
     }
@@ -380,8 +378,7 @@ static bool dyn_request_size_increase(dyn_array_t *const dyn_arr, const size_t i
             size_t new_capacity = dyn_arr->capacity << 1;
             while(new_capacity < needed_size)
                 new_capacity <<= 1;
-            
-            void *new_array = realloc(dyn_arr->array, new_capacity);
+            void *new_array = realloc(dyn_arr->array, new_capacity * dyn_arr->data_type_size);
             if(new_array)
             {
                 dyn_arr->capacity = new_capacity;

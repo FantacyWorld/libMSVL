@@ -99,37 +99,50 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named dyn_arr
+# Target rules for targets named dyn_array
 
 # Build rule for target.
-dyn_arr: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 dyn_arr
-.PHONY : dyn_arr
+dyn_array: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 dyn_array
+.PHONY : dyn_array
 
 # fast build rule for target.
-dyn_arr/fast:
-	$(MAKE) -f CMakeFiles/dyn_arr.dir/build.make CMakeFiles/dyn_arr.dir/build
-.PHONY : dyn_arr/fast
+dyn_array/fast:
+	$(MAKE) -f CMakeFiles/dyn_array.dir/build.make CMakeFiles/dyn_array.dir/build
+.PHONY : dyn_array/fast
 
 #=============================================================================
-# Target rules for targets named libMSVL_test
+# Target rules for targets named dyn_array_test
 
 # Build rule for target.
-libMSVL_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 libMSVL_test
-.PHONY : libMSVL_test
+dyn_array_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 dyn_array_test
+.PHONY : dyn_array_test
 
 # fast build rule for target.
-libMSVL_test/fast:
-	$(MAKE) -f CMakeFiles/libMSVL_test.dir/build.make CMakeFiles/libMSVL_test.dir/build
-.PHONY : libMSVL_test/fast
+dyn_array_test/fast:
+	$(MAKE) -f CMakeFiles/dyn_array_test.dir/build.make CMakeFiles/dyn_array_test.dir/build
+.PHONY : dyn_array_test/fast
+
+#=============================================================================
+# Target rules for targets named mytest
+
+# Build rule for target.
+mytest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mytest
+.PHONY : mytest
+
+# fast build rule for target.
+mytest/fast:
+	$(MAKE) -f CMakeFiles/mytest.dir/build.make CMakeFiles/mytest.dir/build
+.PHONY : mytest/fast
 
 dyn_array.o: dyn_array.c.o
 .PHONY : dyn_array.o
 
 # target to build an object file
 dyn_array.c.o:
-	$(MAKE) -f CMakeFiles/dyn_arr.dir/build.make CMakeFiles/dyn_arr.dir/dyn_array.c.o
+	$(MAKE) -f CMakeFiles/dyn_array.dir/build.make CMakeFiles/dyn_array.dir/dyn_array.c.o
 .PHONY : dyn_array.c.o
 
 dyn_array.i: dyn_array.c.i
@@ -137,7 +150,7 @@ dyn_array.i: dyn_array.c.i
 
 # target to preprocess a source file
 dyn_array.c.i:
-	$(MAKE) -f CMakeFiles/dyn_arr.dir/build.make CMakeFiles/dyn_arr.dir/dyn_array.c.i
+	$(MAKE) -f CMakeFiles/dyn_array.dir/build.make CMakeFiles/dyn_array.dir/dyn_array.c.i
 .PHONY : dyn_array.c.i
 
 dyn_array.s: dyn_array.c.s
@@ -145,32 +158,56 @@ dyn_array.s: dyn_array.c.s
 
 # target to generate assembly for a file
 dyn_array.c.s:
-	$(MAKE) -f CMakeFiles/dyn_arr.dir/build.make CMakeFiles/dyn_arr.dir/dyn_array.c.s
+	$(MAKE) -f CMakeFiles/dyn_array.dir/build.make CMakeFiles/dyn_array.dir/dyn_array.c.s
 .PHONY : dyn_array.c.s
 
-tests.o: tests.cpp.o
-.PHONY : tests.o
+dyn_array_tests.o: dyn_array_tests.cpp.o
+.PHONY : dyn_array_tests.o
 
 # target to build an object file
-tests.cpp.o:
-	$(MAKE) -f CMakeFiles/libMSVL_test.dir/build.make CMakeFiles/libMSVL_test.dir/tests.cpp.o
-.PHONY : tests.cpp.o
+dyn_array_tests.cpp.o:
+	$(MAKE) -f CMakeFiles/dyn_array_test.dir/build.make CMakeFiles/dyn_array_test.dir/dyn_array_tests.cpp.o
+.PHONY : dyn_array_tests.cpp.o
 
-tests.i: tests.cpp.i
-.PHONY : tests.i
+dyn_array_tests.i: dyn_array_tests.cpp.i
+.PHONY : dyn_array_tests.i
 
 # target to preprocess a source file
-tests.cpp.i:
-	$(MAKE) -f CMakeFiles/libMSVL_test.dir/build.make CMakeFiles/libMSVL_test.dir/tests.cpp.i
-.PHONY : tests.cpp.i
+dyn_array_tests.cpp.i:
+	$(MAKE) -f CMakeFiles/dyn_array_test.dir/build.make CMakeFiles/dyn_array_test.dir/dyn_array_tests.cpp.i
+.PHONY : dyn_array_tests.cpp.i
 
-tests.s: tests.cpp.s
-.PHONY : tests.s
+dyn_array_tests.s: dyn_array_tests.cpp.s
+.PHONY : dyn_array_tests.s
 
 # target to generate assembly for a file
-tests.cpp.s:
-	$(MAKE) -f CMakeFiles/libMSVL_test.dir/build.make CMakeFiles/libMSVL_test.dir/tests.cpp.s
-.PHONY : tests.cpp.s
+dyn_array_tests.cpp.s:
+	$(MAKE) -f CMakeFiles/dyn_array_test.dir/build.make CMakeFiles/dyn_array_test.dir/dyn_array_tests.cpp.s
+.PHONY : dyn_array_tests.cpp.s
+
+mytest.o: mytest.c.o
+.PHONY : mytest.o
+
+# target to build an object file
+mytest.c.o:
+	$(MAKE) -f CMakeFiles/mytest.dir/build.make CMakeFiles/mytest.dir/mytest.c.o
+.PHONY : mytest.c.o
+
+mytest.i: mytest.c.i
+.PHONY : mytest.i
+
+# target to preprocess a source file
+mytest.c.i:
+	$(MAKE) -f CMakeFiles/mytest.dir/build.make CMakeFiles/mytest.dir/mytest.c.i
+.PHONY : mytest.c.i
+
+mytest.s: mytest.c.s
+.PHONY : mytest.s
+
+# target to generate assembly for a file
+mytest.c.s:
+	$(MAKE) -f CMakeFiles/mytest.dir/build.make CMakeFiles/mytest.dir/mytest.c.s
+.PHONY : mytest.c.s
 
 # Help Target
 help:
@@ -178,16 +215,20 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... dyn_arr"
+	@echo "... dyn_array"
+	@echo "... dyn_array_test"
 	@echo "... edit_cache"
-	@echo "... libMSVL_test"
+	@echo "... mytest"
 	@echo "... rebuild_cache"
 	@echo "... dyn_array.o"
 	@echo "... dyn_array.i"
 	@echo "... dyn_array.s"
-	@echo "... tests.o"
-	@echo "... tests.i"
-	@echo "... tests.s"
+	@echo "... dyn_array_tests.o"
+	@echo "... dyn_array_tests.i"
+	@echo "... dyn_array_tests.s"
+	@echo "... mytest.o"
+	@echo "... mytest.i"
+	@echo "... mytest.s"
 .PHONY : help
 
 

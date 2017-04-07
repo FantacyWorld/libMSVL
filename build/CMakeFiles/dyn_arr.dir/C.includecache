@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/geekwar/libMSVL/dyn_array.c
+dyn_array.h
+/home/geekwar/libMSVL/dyn_array.h
+
+/home/geekwar/libMSVL/dyn_array.h
+stdbool.h
+-
+stddef.h
+-
+string.h
+-
+stdlib.h
+-
+stdint.h
+-
+

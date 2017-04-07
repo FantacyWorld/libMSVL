@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c11 -g -Wall -Wextra -Wshadow -Werror    CMakeFiles/mytest.dir/mytest.c.o  -o mytest -rdynamic libdyn_array.so -Wl,-rpath,/home/geekwar/libMSVL/build 

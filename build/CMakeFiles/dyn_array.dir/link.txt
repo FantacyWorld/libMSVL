@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC -std=c11 -g -Wall -Wextra -Wshadow -Werror   -shared -Wl,-soname,libdyn_array.so -o libdyn_array.so CMakeFiles/dyn_array.dir/dyn_array.c.o 

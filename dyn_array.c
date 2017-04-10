@@ -45,6 +45,9 @@ dyn_array_t * dyn_array_create(const size_t capacity, const size_t data_type_siz
             while(actual_capacity < capacity)
                 actual_capacity <<= 1;
             
+            if(actual_capacity > DYN_MAX_CAPACITY)
+                free(dyn_arr);
+            
             // dyn_array->capacity = actual_capacity;
             // dyn_array->size = 0;
             // dyn_array->data_type_size = data_type_size;

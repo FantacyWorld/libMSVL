@@ -36,7 +36,9 @@ void dyn_hash_map_destroy(dyn_hash_map_t * const dyn_hash_map);
 
 /// insert a pair into the map 
 /// \return true if the key of the pair to be inserted is not in the map
-bool dyn_hash_mao_insert(dyn_hash_map_t * const dyn_hash_map, ); 
+bool dyn_hash_map_insert(dyn_hash_map_t * const dyn_hash_map, ); 
+
+void * dyn_hash_map_find(dyn_hash_map_t const dyn_hash_map, void *key);
 
 
 #ifdef __cplusplus
